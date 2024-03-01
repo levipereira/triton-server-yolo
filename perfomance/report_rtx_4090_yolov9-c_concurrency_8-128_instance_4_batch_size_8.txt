@@ -1,0 +1,285 @@
+./install/bin/perf_analyzer -m yolov9-c -u 127.0.0.1:8001 -i grpc --shared-memory system --concurrency-range 8:128:8
+
+*** Measurement Settings ***
+  Batch size: 1
+  Service Kind: Triton
+  Using "time_windows" mode for stabilization
+  Measurement window: 5000 msec
+  Latency limit: 0 msec
+  Concurrency limit: 128 concurrent requests
+  Using synchronous calls for inference
+  Stabilizing using average latency
+
+Request concurrency: 8
+  Client: 
+    Request count: 6944
+    Throughput: 385.748 infer/sec
+    Avg latency: 20716 usec (standard deviation 1066 usec)
+    p50 latency: 20659 usec
+    p90 latency: 20746 usec
+    p95 latency: 20798 usec
+    p99 latency: 21625 usec
+    Avg gRPC time: 20705 usec ((un)marshal request/response 7 usec + response wait 20698 usec)
+  Server: 
+    Inference count: 6944
+    Execution count: 868
+    Successful request count: 6944
+    Avg request latency: 20526 usec (overhead 186 usec + queue 84 usec + compute input 9635 usec + compute infer 10549 usec + compute output 71 usec)
+
+Request concurrency: 16
+  Client: 
+    Request count: 11992
+    Throughput: 666.166 infer/sec
+    Avg latency: 24020 usec (standard deviation 303 usec)
+    p50 latency: 23993 usec
+    p90 latency: 24111 usec
+    p95 latency: 24157 usec
+    p99 latency: 25007 usec
+    Avg gRPC time: 24008 usec ((un)marshal request/response 7 usec + response wait 24001 usec)
+  Server: 
+    Inference count: 11992
+    Execution count: 1499
+    Successful request count: 11992
+    Avg request latency: 23833 usec (overhead 200 usec + queue 95 usec + compute input 10399 usec + compute infer 13053 usec + compute output 84 usec)
+
+Request concurrency: 24
+  Client: 
+    Request count: 12552
+    Throughput: 697.258 infer/sec
+    Avg latency: 34405 usec (standard deviation 1667 usec)
+    p50 latency: 34848 usec
+    p90 latency: 36218 usec
+    p95 latency: 36525 usec
+    p99 latency: 37345 usec
+    Avg gRPC time: 34392 usec ((un)marshal request/response 8 usec + response wait 34384 usec)
+  Server: 
+    Inference count: 12552
+    Execution count: 1569
+    Successful request count: 12552
+    Avg request latency: 34206 usec (overhead 184 usec + queue 100 usec + compute input 11213 usec + compute infer 22584 usec + compute output 124 usec)
+
+Request concurrency: 32
+  Client: 
+    Request count: 13112
+    Throughput: 728.366 infer/sec
+    Avg latency: 43913 usec (standard deviation 426 usec)
+    p50 latency: 43941 usec
+    p90 latency: 44294 usec
+    p95 latency: 44422 usec
+    p99 latency: 44844 usec
+    Avg gRPC time: 43900 usec ((un)marshal request/response 8 usec + response wait 43892 usec)
+  Server: 
+    Inference count: 13112
+    Execution count: 1639
+    Successful request count: 13112
+    Avg request latency: 43710 usec (overhead 179 usec + queue 86 usec + compute input 11515 usec + compute infer 31786 usec + compute output 144 usec)
+
+Request concurrency: 40
+  Client: 
+    Request count: 13120
+    Throughput: 728.826 infer/sec
+    Avg latency: 54844 usec (standard deviation 937 usec)
+    p50 latency: 54790 usec
+    p90 latency: 55888 usec
+    p95 latency: 56273 usec
+    p99 latency: 57053 usec
+    Avg gRPC time: 54831 usec ((un)marshal request/response 8 usec + response wait 54823 usec)
+  Server: 
+    Inference count: 13120
+    Execution count: 1640
+    Successful request count: 13120
+    Avg request latency: 54631 usec (overhead 170 usec + queue 94 usec + compute input 1138 usec + compute infer 42734 usec + compute output 10494 usec)
+
+Request concurrency: 48
+  Client: 
+    Request count: 13024
+    Throughput: 723.484 infer/sec
+    Avg latency: 66320 usec (standard deviation 10659 usec)
+    p50 latency: 65262 usec
+    p90 latency: 77926 usec
+    p95 latency: 78382 usec
+    p99 latency: 79301 usec
+    Avg gRPC time: 66308 usec ((un)marshal request/response 8 usec + response wait 66300 usec)
+  Server: 
+    Inference count: 13024
+    Execution count: 1628
+    Successful request count: 13024
+    Avg request latency: 66163 usec (overhead 262 usec + queue 1394 usec + compute input 332 usec + compute infer 43888 usec + compute output 20286 usec)
+
+Request concurrency: 56
+  Client: 
+    Request count: 11864
+    Throughput: 659.06 infer/sec
+    Avg latency: 84793 usec (standard deviation 12591 usec)
+    p50 latency: 86225 usec
+    p90 latency: 99215 usec
+    p95 latency: 106487 usec
+    p99 latency: 108428 usec
+    Avg gRPC time: 84781 usec ((un)marshal request/response 8 usec + response wait 84773 usec)
+  Server: 
+    Inference count: 11864
+    Execution count: 1483
+    Successful request count: 11864
+    Avg request latency: 84635 usec (overhead 243 usec + queue 17781 usec + compute input 4030 usec + compute infer 38855 usec + compute output 23725 usec)
+
+Request concurrency: 64
+  Client: 
+    Request count: 11688
+    Throughput: 649.282 infer/sec
+    Avg latency: 98546 usec (standard deviation 12414 usec)
+    p50 latency: 100456 usec
+    p90 latency: 112781 usec
+    p95 latency: 116427 usec
+    p99 latency: 119760 usec
+    Avg gRPC time: 98533 usec ((un)marshal request/response 9 usec + response wait 98524 usec)
+  Server: 
+    Inference count: 11688
+    Execution count: 1461
+    Successful request count: 11688
+    Avg request latency: 98371 usec (overhead 236 usec + queue 32212 usec + compute input 3893 usec + compute infer 39050 usec + compute output 22979 usec)
+
+Request concurrency: 72
+  Client: 
+    Request count: 11672
+    Throughput: 648.387 infer/sec
+    Avg latency: 110982 usec (standard deviation 11892 usec)
+    p50 latency: 115427 usec
+    p90 latency: 123171 usec
+    p95 latency: 126731 usec
+    p99 latency: 129724 usec
+    Avg gRPC time: 110969 usec ((un)marshal request/response 9 usec + response wait 110960 usec)
+  Server: 
+    Inference count: 11672
+    Execution count: 1459
+    Successful request count: 11672
+    Avg request latency: 110808 usec (overhead 242 usec + queue 44494 usec + compute input 3855 usec + compute infer 39090 usec + compute output 23125 usec)
+
+Request concurrency: 80
+  Client: 
+    Request count: 11696
+    Throughput: 649.704 infer/sec
+    Avg latency: 123067 usec (standard deviation 12029 usec)
+    p50 latency: 127281 usec
+    p90 latency: 133875 usec
+    p95 latency: 136701 usec
+    p99 latency: 140644 usec
+    Avg gRPC time: 123054 usec ((un)marshal request/response 8 usec + response wait 123046 usec)
+  Server: 
+    Inference count: 11696
+    Execution count: 1462
+    Successful request count: 11696
+    Avg request latency: 122902 usec (overhead 253 usec + queue 56847 usec + compute input 3873 usec + compute infer 39065 usec + compute output 22863 usec)
+
+Request concurrency: 88
+  Client: 
+    Request count: 11672
+    Throughput: 648.383 infer/sec
+    Avg latency: 135658 usec (standard deviation 12752 usec)
+    p50 latency: 139997 usec
+    p90 latency: 150155 usec
+    p95 latency: 151254 usec
+    p99 latency: 153787 usec
+    Avg gRPC time: 135646 usec ((un)marshal request/response 8 usec + response wait 135638 usec)
+  Server: 
+    Inference count: 11672
+    Execution count: 1459
+    Successful request count: 11672
+    Avg request latency: 135495 usec (overhead 261 usec + queue 69370 usec + compute input 3865 usec + compute infer 39079 usec + compute output 22920 usec)
+
+Request concurrency: 96
+  Client: 
+    Request count: 11664
+    Throughput: 647.949 infer/sec
+    Avg latency: 147933 usec (standard deviation 13844 usec)
+    p50 latency: 150841 usec
+    p90 latency: 156930 usec
+    p95 latency: 180975 usec
+    p99 latency: 182019 usec
+    Avg gRPC time: 147929 usec ((un)marshal request/response 9 usec + response wait 147920 usec)
+  Server: 
+    Inference count: 11664
+    Execution count: 1458
+    Successful request count: 11664
+    Avg request latency: 147757 usec (overhead 249 usec + queue 81448 usec + compute input 3813 usec + compute infer 39090 usec + compute output 23156 usec)
+
+Request concurrency: 104
+  Client: 
+    Request count: 11664
+    Throughput: 647.947 infer/sec
+    Avg latency: 160398 usec (standard deviation 11340 usec)
+    p50 latency: 162247 usec
+    p90 latency: 168684 usec
+    p95 latency: 185269 usec
+    p99 latency: 186769 usec
+    Avg gRPC time: 160384 usec ((un)marshal request/response 9 usec + response wait 160375 usec)
+  Server: 
+    Inference count: 11664
+    Execution count: 1458
+    Successful request count: 11664
+    Avg request latency: 160212 usec (overhead 240 usec + queue 93942 usec + compute input 3861 usec + compute infer 39128 usec + compute output 23040 usec)
+
+Request concurrency: 112
+  Client: 
+    Request count: 11656
+    Throughput: 647.48 infer/sec
+    Avg latency: 172840 usec (standard deviation 8306 usec)
+    p50 latency: 172996 usec
+    p90 latency: 179043 usec
+    p95 latency: 193255 usec
+    p99 latency: 195584 usec
+    Avg gRPC time: 172826 usec ((un)marshal request/response 9 usec + response wait 172817 usec)
+  Server: 
+    Inference count: 11656
+    Execution count: 1457
+    Successful request count: 11656
+    Avg request latency: 172660 usec (overhead 260 usec + queue 106590 usec + compute input 3905 usec + compute infer 39079 usec + compute output 22824 usec)
+
+Request concurrency: 120
+  Client: 
+    Request count: 11650
+    Throughput: 647.157 infer/sec
+    Avg latency: 185295 usec (standard deviation 5242 usec)
+    p50 latency: 185466 usec
+    p90 latency: 189361 usec
+    p95 latency: 197725 usec
+    p99 latency: 201209 usec
+    Avg gRPC time: 185284 usec ((un)marshal request/response 9 usec + response wait 185275 usec)
+  Server: 
+    Inference count: 11648
+    Execution count: 1456
+    Successful request count: 11648
+    Avg request latency: 185120 usec (overhead 251 usec + queue 119020 usec + compute input 3889 usec + compute infer 39051 usec + compute output 22907 usec)
+
+Request concurrency: 128
+  Client: 
+    Request count: 11648
+    Throughput: 647.056 infer/sec
+    Avg latency: 197744 usec (standard deviation 8851 usec)
+    p50 latency: 196490 usec
+    p90 latency: 214529 usec
+    p95 latency: 216638 usec
+    p99 latency: 217809 usec
+    Avg gRPC time: 197730 usec ((un)marshal request/response 9 usec + response wait 197721 usec)
+  Server: 
+    Inference count: 11648
+    Execution count: 1456
+    Successful request count: 11648
+    Avg request latency: 197564 usec (overhead 260 usec + queue 131310 usec + compute input 3878 usec + compute infer 39120 usec + compute output 22995 usec)
+
+Inferences/Second vs. Client Average Batch Latency
+Concurrency: 8, throughput: 385.748 infer/sec, latency 20716 usec
+Concurrency: 16, throughput: 666.166 infer/sec, latency 24020 usec
+Concurrency: 24, throughput: 697.258 infer/sec, latency 34405 usec
+Concurrency: 32, throughput: 728.366 infer/sec, latency 43913 usec
+Concurrency: 40, throughput: 728.826 infer/sec, latency 54844 usec
+Concurrency: 48, throughput: 723.484 infer/sec, latency 66320 usec
+Concurrency: 56, throughput: 659.06 infer/sec, latency 84793 usec
+Concurrency: 64, throughput: 649.282 infer/sec, latency 98546 usec
+Concurrency: 72, throughput: 648.387 infer/sec, latency 110982 usec
+Concurrency: 80, throughput: 649.704 infer/sec, latency 123067 usec
+Concurrency: 88, throughput: 648.383 infer/sec, latency 135658 usec
+Concurrency: 96, throughput: 647.949 infer/sec, latency 147933 usec
+Concurrency: 104, throughput: 647.947 infer/sec, latency 160398 usec
+Concurrency: 112, throughput: 647.48 infer/sec, latency 172840 usec
+Concurrency: 120, throughput: 647.157 infer/sec, latency 185295 usec
+Concurrency: 128, throughput: 647.056 infer/sec, latency 197744 usec

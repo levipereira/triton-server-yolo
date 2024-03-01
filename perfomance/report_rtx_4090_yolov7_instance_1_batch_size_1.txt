@@ -1,0 +1,28 @@
+./install/bin/perf_analyzer -m yolov7 -u 127.0.0.1:8001 -i grpc --shared-memory system --concurrency-range 1
+
+*** Measurement Settings ***
+  Batch size: 1
+  Service Kind: Triton
+  Using "time_windows" mode for stabilization
+  Measurement window: 5000 msec
+  Using synchronous calls for inference
+  Stabilizing using average latency
+
+Request concurrency: 1
+  Client: 
+    Request count: 4780
+    Throughput: 265.541 infer/sec
+    Avg latency: 3764 usec (standard deviation 88 usec)
+    p50 latency: 3746 usec
+    p90 latency: 3834 usec
+    p95 latency: 3864 usec
+    p99 latency: 4099 usec
+    Avg gRPC time: 3758 usec ((un)marshal request/response 4 usec + response wait 3754 usec)
+  Server: 
+    Inference count: 4781
+    Execution count: 4781
+    Successful request count: 4781
+    Avg request latency: 3648 usec (overhead 28 usec + queue 20 usec + compute input 1055 usec + compute infer 2510 usec + compute output 34 usec)
+
+Inferences/Second vs. Client Average Batch Latency
+Concurrency: 1, throughput: 265.541 infer/sec, latency 3764 usec
