@@ -1,6 +1,6 @@
-# Triton Server  YOLOv7 / YOLOv9-C /YOLOv9-E 
+# Triton Server  YOLOv7 and  YOLOv9 Series 
 
-This repository serves as an example of deploying the Models YOLOv7 model (FP16), YOLOv9-C and the YOLOv9-E on Triton-Server for performance and testing. It includes support for applications developed using Nvidia DeepStream. 
+This repository serves as an example of deploying the Models YOLOv7 and  YOLOv9 Series on Triton-Server for performance and testing. It includes support for applications developed using Nvidia DeepStream. 
 
 
 This repository utilizes exported models using ONNX with the Efficient NMS plugin enabled to generate TensorRT engines.
@@ -9,19 +9,26 @@ Users can either build ONNX files themselves  or simply utilize the [start-conta
 
 ## ONNX Models Directory
 
-If users build the ONNX models themselves, they should place the models in this directory with the following structure:
+If users build the ONNX models themselves, they should place the models in this directory:
 ```bash
-models_onnx/
-├── yolov7
-│   └── yolov7_end2end.onnx
-├── yolov9-c
-│   └── yolov9-c_end2end.onnx
-└── yolov9-e
-    └── yolov9-e_end2end.onnx
+./models_onnx/
 ```
 
+#### Models names with Dynamic Batching and TRT Efficient NMS plugin##
+* yolov7-end2end.onnx
+* yolov7x-end2end.onnx
+* yolov9-e-end2end.onnx
+* yolov9-c-end2end.onnx
+
+#### Models with Dynamic Batching only ####
+* yolov9-e.onnx
+* yolov9-c.onnx
+* yolov7.onnx
+* yolov7x.onnx
+
+
 ## Manual ONNX YOLOv7/v9 exports
-### Exporting from PyTorch (YOLOv7 FP16) to ONNX With Efficient NMS plugin
+### Exporting YOLOv7 Series from PyTorch to ONNX With Efficient NMS plugin
 This repo does not export pytorch models to ONNX. <br>
 You can use the [Yolov7 Repository](https://github.com/WongKinYiu/yolov7) or the [Yolov7 Docker Image](https://github.com/levipereira/docker_images/tree/master/yolov7) for your convenience.
 
@@ -37,7 +44,7 @@ python export.py --weights yolov7.pt \
   --img-size 640 640
 ```
 
-### Exporting from PyTorch (YOLOv9-C/E )  to ONNX With Efficient NMS plugin
+### Exporting YOLOv9 Series from PyTorch (YOLOv9-C/E )  to ONNX With Efficient NMS plugin
 This repo does not export pytorch models to ONNX. <br>
 You can use this repo [Yolov9 ](https://github.com/levipereira/yolov9)  
 
@@ -77,19 +84,27 @@ Note: This script must be executed on the host operating system.
 ### Usage Script (start-triton-server.sh) :
 
 ``` bash
-Usage:
- ./start-triton-server.sh <max_batch_size> <opt_batch_size> <instance_group> [--force]
- - max_batch_size: Maximum batch size for TensorRT engines.
- - opt_batch_size: Optimal batch size for TensorRT engines.
- - instance_group: Number of TensorRT engine instances loaded per model in the Triton Server.
- - Use the flag --force to rebuild TensorRT engines even if they already exist.
+ Usage:
+ ./start-triton-server.sh [--model_name <model_name>] [--efficient_nms <enable/disable>] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] [--force]
+
+ - Use --model_name to specify the YOLO model name. Choose from 'yolov9-c', 'yolov9-e', 'yolov7', 'yolov7x'.
+ - Use --efficient_nms to enable or disable load Models with TRT Efficient NMS plugin. Options: 'enable' or 'disable'.
+ - Use --opt_batch_size to specify the optimal batch size for TensorRT engines.
+ - Use --max_batch_size to specify the maximum batch size for TensorRT engines.
+ - Use --instance_group to specify the number of TensorRT engine instances loaded per model in the Triton Server.
+ - Use --force to rebuild TensorRT engines even if they already exist.
 ```
 
 The `--force` flag must be utilized whenever the maximum batch size of the model is smaller than the current configuration.
 
 Example
 ``` bash
-bash ./start-triton-server.sh  16 8 3 --force
+./start-triton-server01.sh \
+ --models yolov7,yolov9-c \
+ --efficient_nms enable \
+ --opt_batch_size 4 \
+ --max_batch_size 4 \
+ --instance_group 1
 ```
 This script converts ONNX models to TensorRT engines and starts the NVIDIA Triton Inference Server.
 
@@ -137,7 +152,7 @@ Note:<br>
 * The setting "max_queue_delay_microseconds: 30000" is optimized for a 30fps input rate.
 
 ```
-name: "yolov9"
+name: "yolov9-c"
 platform: "tensorrt_plan"
 max_batch_size: 8
 input [
@@ -195,12 +210,7 @@ example:
 ```bash
 docker run -it --ipc=host --net=host nvcr.io/nvidia/tritonserver:23.08-py3-sdk /bin/bash
 
-$ ./install/bin/perf_analyzer -m yolov9-e  \
-    -u 127.0.0.1:8001 \
-    -i grpc \
-    --shared-memory system \
-    --concurrency-range 1
-
+$ ./install/bin/perf_analyzer -m yolov7 -u 127.0.0.1:8001 -i grpc --shared-memory system --concurrency-range 1
 *** Measurement Settings ***
   Batch size: 1
   Service Kind: Triton
@@ -210,23 +220,23 @@ $ ./install/bin/perf_analyzer -m yolov9-e  \
   Stabilizing using average latency
 
 Request concurrency: 1
-  Client: 
-    Request count: 4780
-    Throughput: 265.541 infer/sec
-    Avg latency: 3764 usec (standard deviation 88 usec)
-    p50 latency: 3746 usec
-    p90 latency: 3834 usec
-    p95 latency: 3864 usec
-    p99 latency: 4099 usec
-    Avg gRPC time: 3758 usec ((un)marshal request/response 4 usec + response wait 3754 usec)
-  Server: 
-    Inference count: 4781
-    Execution count: 4781
-    Successful request count: 4781
-    Avg request latency: 3648 usec (overhead 28 usec + queue 20 usec + compute input 1055 usec + compute infer 2510 usec + compute output 34 usec)
+  Client:
+    Request count: 7524
+    Throughput: 417.972 infer/sec
+    Avg latency: 2391 usec (standard deviation 1235 usec)
+    p50 latency: 2362 usec
+    p90 latency: 2460 usec
+    p95 latency: 2484 usec
+    p99 latency: 2669 usec
+    Avg gRPC time: 2386 usec ((un)marshal request/response 4 usec + response wait 2382 usec)
+  Server:
+    Inference count: 7524
+    Execution count: 7524
+    Successful request count: 7524
+    Avg request latency: 2280 usec (overhead 30 usec + queue 18 usec + compute input 972 usec + compute infer 1223 usec + compute output 36 usec)
 
 Inferences/Second vs. Client Average Batch Latency
-Concurrency: 1, throughput: 265.541 infer/sec, latency 3764 usec
+Concurrency: 1, throughput: 417.972 infer/sec, latency 2391 usec
 
 ```
 

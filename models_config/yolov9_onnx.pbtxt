@@ -1,0 +1,28 @@
+name: "model_template_name"
+platform: "tensorrt_plan"
+max_batch_size: 8
+input [
+  {
+    name: "images"
+    data_type: TYPE_FP32
+    dims: [ 3, 640, 640 ]
+  }
+]
+output [
+  {
+    name: "output0"
+    data_type: TYPE_FP32
+    dims: [84, 8400]
+  } 
+]
+instance_group [
+    {
+      count: 4
+      kind: KIND_GPU
+      gpus: [ 0 ]
+    }
+]
+version_policy: { latest: { num_versions: 1}}
+dynamic_batching {
+  max_queue_delay_microseconds: 0
+}

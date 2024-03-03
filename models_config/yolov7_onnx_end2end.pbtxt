@@ -1,4 +1,4 @@
-name: "yolov7"
+name: "model_template_name"
 platform: "tensorrt_plan"
 max_batch_size: 8
 input [

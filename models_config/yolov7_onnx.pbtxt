@@ -1,4 +1,4 @@
-name: "yolov9-c"
+name: "model_template_name"
 platform: "tensorrt_plan"
 max_batch_size: 8
 input [
@@ -10,25 +10,20 @@ input [
 ]
 output [
   {
-    name: "num_dets"
-    data_type: TYPE_INT32
-    dims: [ 1 ]
-  },
-  {
-    name: "det_boxes"
+    name: "output"
     data_type: TYPE_FP32
-    dims: [ 100, 4 ]
+    dims: [ 3, 80, 80, 85 ]
   },
   {
-    name: "det_scores"
+    name: "546"
     data_type: TYPE_FP32
-    dims: [ 100 ]
+    dims: [3, 20, 20, 85 ]
   },
   {
-    name: "det_classes"
-    data_type: TYPE_INT32
-    dims: [ 100 ]
-  }
+    name: "528"
+    data_type: TYPE_FP32
+    dims: [ 3, 40, 40, 85 ]
+  } 
 ]
 instance_group [
     {

@@ -8,37 +8,6 @@ All tests can be reproduced by using this [repo](https://github.com/levipereira/
 
 The YOLOv7, YOLOv9-c and YOLOv9-e models have been converted to ONNX with the Efficient NMS plugin.
 
-## Hardware 
-``` bash
-
-Base Board Information
-Manufacturer: ASUSTeK COMPUTER INC.
-Product Name: ROG STRIX B450-F GAMING
-
-
-CPU(s):                  16
-Model name:            AMD Ryzen 7 3700X 8-Core Processor
-
-
-                total        used        free      shared  buff/cache   available
-Mem:            15Gi       1.9Gi       7.1Gi        42Mi       6.5Gi        13Gi
-
-
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 550.54.14              Driver Version: 550.54.14      CUDA Version: 12.4     |
-|-----------------------------------------+------------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
-|                                         |                        |               MIG M. |
-|=========================================+========================+======================|
-|   0  NVIDIA GeForce RTX 4090        Off |   00000000:09:00.0 Off |                  Off |
-| 36%   38C    P0             N/A /  450W |       0MiB /  24564MiB |      0%      Default |
-|                                         |                        |                  N/A |
-+-----------------------------------------------------------------------------------------+
-
-OS: Ubuntu 22.04.4 LTS (Jammy Jellyfish)
-```
-
 
 
 ## [Test 1](#result-test-1)
