@@ -1,168 +1,133 @@
 # Perfomance Test using GPU RTX 4090 on AMD Ryzen 7 3700X 8-Core/ 16GB RAM
 
-All tests can be reproduced by using this [repo](https://github.com/levipereira/triton-server-yolo-v7-v9)
-
 # Model Performance Evaluation using TensorRT engine 
+All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching enabled. Profiling was conducted using TensorRT Engine Explorer (TREx).
+
+Detailed reports will be made available in the coming days, providing comprehensive insights into the performance metrics and optimizations achieved.
 
 **TensorRT version: 8.6.1**
 
-The YOLOv7, YOLOv9-c and YOLOv9-e models have been converted to ONNX with the Efficient NMS plugin.
+### Device Properties:
+- Selected Device: NVIDIA GeForce RTX 4090
+- Compute Capability: 8.9
+- SMs: 128.0
+- Compute Clock Rate: 2.58 GHz
+- Device Global Memory: 24208 MiB
+- Shared Memory per SM: 100 KiB
+- Memory Bus Width: 384.0 bits
+- Memory Clock Rate: 10.501 GHz
+
+
+# YOLO v8 vs v9 Series Models Performance Results
+
+- **Average time**: Represents the total sum of layer latencies when profiling layers individually.
+- **Latency**: Refers to the minimum, maximum, mean, median, and 99th percentile of the engine latency measurements, captured without profiling layers.
+- **Throughput**: Measured in inferences per second (IPS).
 
 
 
-## [Test 1](#result-test-1)
+# Performance Summary Tables
 
-- **Objective:** Assess the individual performance of each model.
-- **Setup:**
-  - 1 instance
-  - 1 concurrent client
-  - Model configured with batch size 1
+## Throughput and Average Time
 
-## [Test 2](#result-test-2)
+| Model Name | Throughput (IPS) | Average Time (ms) |
+|------------|------------------|-------------------|
+| YOLOv7     | 978              | 1.441             |
+| YOLOv7x    | 609              | 2.065             |
+| YOLOv9-c   | 798              | 2.049             |
+| YOLOv9-e   | 353              | 4.261             |
 
-- **Objective:** Evaluate global performance and discover the maximum potential performance of the model.
-- **Setup:**
-  - 4 instances of the model
-  - 8 batch size per model
-  - Client concurrent configuration:
-    - Starting with 8 concurrent clients
-    - Incrementing by 8 concurrent clients
-    - Reaching a maximum of 128 concurrent clients
+## Latency Summary
 
- ## Overall Result
+| Model Name | Min Latency (ms) | Max Latency (ms) | Mean Latency (ms) | Median Latency (ms) | 99th Percentile Latency (ms) |
+|------------|-------------------|-------------------|-------------------|----------------------|------------------------------|
+| YOLOv7     | 1.012             | 1.104             | 1.020             | 1.018                | 1.024                        |
+| YOLOv7x    | 1.613             | 1.751             | 1.640             | 1.636                | 1.664                        |
+| YOLOv9-c   | 1.246             | 1.359             | 1.251             | 1.250                | 1.251                        |
+| YOLOv9-e   | 2.807             | 3.032             | 2.823             | 2.814                | 2.817                        |
 
-The tests demonstrated that the YOLOv9-C model requires some optimizations to perform better with the TensorRT engine. It had a worse performance compared to its predecessor, YOLOv7. The next steps involve profiling the models to identify bottlenecks.
+# Performance Summary Report
 
+## YOLOv7
 
+### Model:
+- Inputs: images: [1, 3, 640, 640]xFP32 NCHW
+- Outputs: 
+    - 546: [1, 3, 20, 20, 85]xFP32 NCHW
+    - output: [1, 3, 80, 80, 85]xFP32 NCHW
+    - 528: [1, 3, 40, 40, 85]xFP32 NCHW
+- Average time: 1.441 ms
+- Layers: 140
+- Weights: 70.3 MB
+- Activations: 558.7 MB
 
-# Result Test 1
+### Performance Summary:
+- Throughput: 978.521 IPS
+- Latency (ms): 
+    - Min: 1.01273
+    - Max: 1.10387
+    - Mean: 1.02031
+    - Median: 1.01782
+    - 99th Percentile: 1.02405
 
-### YOLOv7
+## YOLOv7x
 
-`Latency: 4ms` <br>
-`Throughput: 265 infer/sec`
+### Model:
+- Inputs: images: [1, 3, 640, 640]xFP32 NCHW
+- Outputs: 
+    - 608: [1, 3, 40, 40, 85]xFP32 NCHW
+    - 626: [1, 3, 20, 20, 85]xFP32 NCHW
+    - output: [1, 3, 80, 80, 85]xFP32 NCHW
+- Average time: 2.065 ms
+- Layers: 140
+- Weights: 136.0 MB
+- Activations: 685.8 MB
 
-``` bash
-p99 latency: 4099 usec
+### Performance Summary:
+- Throughput: 609.044 IPS
+- Latency (ms): 
+    - Min: 1.61279
+    - Max: 1.75104
+    - Mean: 1.64025
+    - Median: 1.63647
+    - 99th Percentile: 1.66394
 
-Inferences/Second vs. Client Average Batch Latency
-Concurrency: 1, throughput: 265.541 infer/sec, latency 3764 usec
-```
-Report [report_rtx_4090_yolov7_instance_1_batch_size_1](report_rtx_4090_yolov7_instance_1_batch_size_1.txt)
+## YOLOv9-c
 
-### YOLOv9-C (Worst)
+### Model:
+- Inputs: images: [1, 3, 640, 640]xFP32 NCHW
+- Outputs: output0: [1, 80, 8400]xFP32 NCHW
+- Average time: 2.049 ms
+- Layers: 271
+- Weights: 48.2 MB
+- Activations: 611.7 MB
 
-`Latency: 4.4ms` <br>
-`Throughput: 240 infer/sec`
+### Performance Summary:
+- Throughput: 798.327 IPS
+- Latency (ms): 
+    - Min: 1.24622
+    - Max: 1.35886
+    - Mean: 1.25097
+    - Median: 1.25024
+    - 99th Percentile: 1.25122
 
-``` bash
-p99 latency: 4401 usec
+## YOLOv9-e
 
-Inferences/Second vs. Client Average Batch Latency
-Concurrency: 1, throughput: 240.82 infer/sec, latency 4151 usec
-```
-Report [report_rtx_4090_yolov9-c_instance_1_batch_size_1](report_rtx_4090_yolov9-c_instance_1_batch_size_1.txt)
-
-### YOLOv9-E (Best)
-
-`Latency: 3.8ms` <br>
-`Throughput: 282 infer/sec`
-
-``` bash
-p99 latency: 3812 usec
-
-Inferences/Second vs. Client Average Batch Latency
-Concurrency: 1, throughput: 282.649 infer/sec, latency 3536 usec
-```
-Report [report_rtx_4090_yolov9-e_instance_1_batch_size_1](report_rtx_4090_yolov9-e_instance_1_batch_size_1.txt)
-
-
-<br><br>
-# Result Test 2
-
-
-### YOLOv7
-Best Result<br>
-`Concurrency: 32`<br>
-`Latency: 29.1ms` <br>
-`Throughput: 1095 infer/sec`
-
-``` bash
-Inferences/Second vs. Client Average Batch Latency
-Concurrency: 8, throughput: 481.744 infer/sec, latency 16601 usec
-Concurrency: 16, throughput: 743.934 infer/sec, latency 21496 usec
-Concurrency: 24, throughput: 1017.68 infer/sec, latency 23574 usec
-Concurrency: 32, throughput: 1095.88 infer/sec, latency 29189 usec
-Concurrency: 40, throughput: 1096.75 infer/sec, latency 36454 usec
-Concurrency: 48, throughput: 1093.66 infer/sec, latency 43857 usec
-Concurrency: 56, throughput: 1093.65 infer/sec, latency 51169 usec
-Concurrency: 64, throughput: 1093.82 infer/sec, latency 58481 usec
-Concurrency: 72, throughput: 1094.08 infer/sec, latency 65783 usec
-Concurrency: 80, throughput: 1094.08 infer/sec, latency 73096 usec
-Concurrency: 88, throughput: 1094.09 infer/sec, latency 80401 usec
-Concurrency: 96, throughput: 1093.65 infer/sec, latency 87719 usec
-Concurrency: 104, throughput: 1094.09 infer/sec, latency 95022 usec
-Concurrency: 112, throughput: 1094.03 infer/sec, latency 102347 usec
-Concurrency: 120, throughput: 1094.1 infer/sec, latency 109659 usec
-Concurrency: 128, throughput: 1093.62 infer/sec, latency 116983 usec
-```
-Report [report_rtx_4090_yolov7_concurrency_8-128_instance_4_batch_size_8](report_rtx_4090_yolov7_concurrency_8-128_instance_4_batch_size_8.txt)
-
-### YOLOv9-C (Worst)
-
-Best Result<br>
-`Concurrency: 32`<br>
-`Latency: 43.9ms` <br>
-`Throughput: 728 infer/sec`
+### Model:
+- Inputs: images: [1, 3, 640, 640]xFP32 NCHW
+- Outputs: output0: [1, 80, 8400]xFP32 NCHW
+- Average time: 4.261 ms
+- Layers: 486
+- Weights: 109.3 MB
+- Activations: 1706.5 MB
 
 
-``` bash
-Inferences/Second vs. Client Average Batch Latency
-Concurrency: 8, throughput: 385.748 infer/sec, latency 20716 usec
-Concurrency: 16, throughput: 666.166 infer/sec, latency 24020 usec
-Concurrency: 24, throughput: 697.258 infer/sec, latency 34405 usec
-Concurrency: 32, throughput: 728.366 infer/sec, latency 43913 usec
-Concurrency: 40, throughput: 728.826 infer/sec, latency 54844 usec
-Concurrency: 48, throughput: 723.484 infer/sec, latency 66320 usec
-Concurrency: 56, throughput: 659.06 infer/sec, latency 84793 usec
-Concurrency: 64, throughput: 649.282 infer/sec, latency 98546 usec
-Concurrency: 72, throughput: 648.387 infer/sec, latency 110982 usec
-Concurrency: 80, throughput: 649.704 infer/sec, latency 123067 usec
-Concurrency: 88, throughput: 648.383 infer/sec, latency 135658 usec
-Concurrency: 96, throughput: 647.949 infer/sec, latency 147933 usec
-Concurrency: 104, throughput: 647.947 infer/sec, latency 160398 usec
-Concurrency: 112, throughput: 647.48 infer/sec, latency 172840 usec
-Concurrency: 120, throughput: 647.157 infer/sec, latency 185295 usec
-Concurrency: 128, throughput: 647.056 infer/sec, latency 197744 usec
-```
-Report [report_rtx_4090_yolov9-c_concurrency_8-128_instance_4_batch_size_8](report_rtx_4090_yolov9-c_concurrency_8-128_instance_4_batch_size_8.txt)
+### Performance Summary:
+- Throughput: 353.998 IPS
+- Latency (ms): 
+    - Min: 2.80679
+    - Max: 3.03207
+    - Mean: 2.8232
+    - Median: 2.81396
+    - 99th Percentile: 2.81689
 
-### YOLOv9-E (Best)
-
-Best Result<br>
-`Concurrency: 32`<br>
-`Latency: 28.9ms` <br>
-`Throughput: 1103 infer/sec`
-
-``` bash
-Inferences/Second vs. Client Average Batch Latency
-Concurrency: 8, throughput: 475.967 infer/sec, latency 16803 usec
-Concurrency: 16, throughput: 758.159 infer/sec, latency 21084 usec
-Concurrency: 24, throughput: 976.466 infer/sec, latency 24567 usec
-Concurrency: 32, throughput: 1103.89 infer/sec, latency 28987 usec
-Concurrency: 40, throughput: 1095 infer/sec, latency 36509 usec
-Concurrency: 48, throughput: 1093.22 infer/sec, latency 43898 usec
-Concurrency: 56, throughput: 1009.19 infer/sec, latency 55453 usec
-Concurrency: 64, throughput: 1011 infer/sec, latency 63265 usec
-Concurrency: 72, throughput: 1013.21 infer/sec, latency 71060 usec
-Concurrency: 80, throughput: 1012.78 infer/sec, latency 78944 usec
-Concurrency: 88, throughput: 1011.44 infer/sec, latency 86984 usec
-Concurrency: 96, throughput: 1013.24 infer/sec, latency 94708 usec
-Concurrency: 104, throughput: 1012.79 infer/sec, latency 102649 usec
-Concurrency: 112, throughput: 1016.33 infer/sec, latency 110149 usec
-Concurrency: 120, throughput: 1019.89 infer/sec, latency 117610 usec
-Concurrency: 128, throughput: 1013.22 infer/sec, latency 126297 usec
-```
-Report [report_rtx_4090_yolov9-e_concurrency_8-128_instance_4_batch_size_8](report_rtx_4090_yolov9-e_concurrency_8-128_instance_4_batch_size_8.txt)
-
- 
