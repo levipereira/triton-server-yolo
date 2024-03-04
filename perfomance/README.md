@@ -3,7 +3,7 @@
 # Model Performance Evaluation using TensorRT engine 
 All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching enabled. Profiling was conducted using TensorRT Engine Explorer (TREx).
 
-All models was Converted (Re-parameterization), optimized for inference.
+All models were converted (re-parameterized) and optimized for inference.
 
 Detailed reports will be made available in the coming days, providing comprehensive insights into the performance metrics and optimizations achieved.
 
