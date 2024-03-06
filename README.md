@@ -35,7 +35,7 @@ Evaluation test was perfomed using this [client](https://github.com/levipereira/
 | [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt) | 640 | **53.1%** | **71.2%** | **57.8%** | 
 
 
-# Evaluation Comparasion Pytorch vs TensorRT
+# Evaluation Comparasion TensorRT vs Pytorch
 | Model (ONNX) TensorRT  |Model Pytorch   | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
 | :-------------- | :------------ | :-------: | :----------------: | :-------------------------: | :-------------------------: |
 | [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | 640 | **-0.2%** | **-0.1%** | **-0.1%** |
