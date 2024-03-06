@@ -152,7 +152,7 @@ python3 export.py \
 
 # Additional Configurations
 
-See [Triton Model Configuration Documentation](https://github.com/triton-inference-server/server/blob/main/docs/model_configuration.md#model-configuration) for more info.
+See [Triton Model Configuration Documentation](https://github.com/triton-inference-server/server/tree/main/docs) for more info.
 
 
 Example of Yolo Configuration <br>
