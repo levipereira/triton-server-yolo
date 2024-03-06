@@ -1,6 +1,7 @@
 name: "model_template_name"
 platform: "tensorrt_plan"
 max_batch_size: 8
+default_model_filename: "model_template_file"
 input [
   {
     name: "images"
@@ -17,17 +18,17 @@ output [
   {
     name: "det_boxes"
     data_type: TYPE_FP32
-    dims: [ 100, 4 ]
+    dims: [ TOPK, 4 ]
   },
   {
     name: "det_scores"
     data_type: TYPE_FP32
-    dims: [ 100 ]
+    dims: [ TOPK ]
   },
   {
     name: "det_classes"
     data_type: TYPE_INT32
-    dims: [ 100 ]
+    dims: [ TOPK ]
   }
 ]
 instance_group [

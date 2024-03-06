@@ -11,9 +11,19 @@ input [
 ]
 output [
   {
-    name: "output0"
+    name: "output"
     data_type: TYPE_FP32
-    dims: [84, 8400]
+    dims: [ 3, 80, 80, 85 ]
+  },
+  {
+    name: "626"
+    data_type: TYPE_FP32
+    dims: [3, 20, 20, 85 ]
+  },
+  {
+    name: "608"
+    data_type: TYPE_FP32
+    dims: [ 3, 40, 40, 85 ]
   } 
 ]
 instance_group [

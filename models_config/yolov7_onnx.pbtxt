@@ -1,6 +1,7 @@
 name: "model_template_name"
 platform: "tensorrt_plan"
 max_batch_size: 8
+default_model_filename: "model_template_file"
 input [
   {
     name: "images"

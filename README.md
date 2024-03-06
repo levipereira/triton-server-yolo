@@ -1,37 +1,125 @@
-# Triton Server  YOLOv7 and  YOLOv9 Series 
+# Triton Server YOLO Models 
 
-This repository serves as an example of deploying the Models YOLOv7 and  YOLOv9 Series on Triton-Server for performance and testing. It includes support for applications developed using Nvidia DeepStream. 
+This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only YOLOv7 and YOLOv9 are supported, but we plan to add support for YOLOv8 in the future.
+
+## Triton Client Repo
+To test and evaluation YOLO models, you can use this repo [triton-client-yolo]()
+
+## Description
+
+This repository utilizes exported models using ONNX. 
+It offers two types of ONNX models
+1. Model with End2End, Efficient NMS plugin enabled <br>
+  It offers two types of End2End models: 
+  - A model optimized for evaluation (`--topk-all 300 --iou-thres 0.7 --conf-thres 0.001`).
+  - A model optimized for inference  (`--topk-all 100 --iou-thres 0.45 --conf-thres 0.25`).
+
+2. Model with Dynamic Batching only
+  - The Non-Maximum Suppression must be handled by Client  
+
+Detailed Models can be found [here]()
 
 
-This repository utilizes exported models using ONNX with the Efficient NMS plugin enabled to generate TensorRT engines.
+## Running NVIDIA Triton Inference Server Container with Docker
 
-Users can either build ONNX files themselves  or simply utilize the [start-container-triton-server.sh](start-container-triton-server.sh) script to initiate the container and use [start-triton-server.sh](start-triton-server.sh) to automatically download the models, generate the TRT engine, and start the Triton Server.
+### Prerequisites
 
-## ONNX Models Directory
+- Docker with support [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) must be installed.
+- NVIDIA GPU(s) should be available.
 
-If users build the ONNX models themselves, they should place the models in this directory:
-```bash
-./models_onnx/
+### Usage
+
+``` bash
+git clone https://github.com/levipereira/triton-server-yolo.git
+cd triton-server-yolo
+# Start Docker container
+bash ./start-container-triton-server.sh
 ```
 
-#### Models names with Dynamic Batching and TRT Efficient NMS plugin##
-* yolov7-end2end.onnx
-* yolov7x-end2end.onnx
-* yolov9-e-end2end.onnx
-* yolov9-c-end2end.onnx
+Inside Docker Container use `bash ./start-triton-server.sh ` 
 
-#### Models with Dynamic Batching only ####
-* yolov9-e.onnx
-* yolov9-c.onnx
-* yolov7.onnx
-* yolov7x.onnx
+#### Script Usage
+This script is used to build TensorRT engines and start Triton-Server for YOLO models.
+`bash ./start-triton-server.sh `
+
+## Script Options
+- **--models**: Specify the YOLO model name(s). Choose one or more with comma separation. Available options: `yolov9-c`, `yolov9-e`, `yolov7`, `yolov7x`.
+- **--model_mode**: Use Model ONNX optimized for EVALUATION or INFERENCE. Choose from `'eval'` or `'inference'`.
+- **--efficient_nms**: Use the TRT Efficient NMS plugin.. Options: `'enable'` or `'disable'`.
+- **--opt_batch_size**: Specify the optimal batch size for TensorRT engines.
+- **--max_batch_size**: Specify the maximum batch size for TensorRT engines.
+- **--instance_group**: Specify the number of TensorRT engine instances loaded per model in the Triton Server.
+- **--force**: Rebuild TensorRT engines even if they already exist.
+- **--reset_all**: Purge all existing TensorRT engines and their respective configurations.
+
+
+### Script Flow:
+1. Checks for the existence of YOLOv7/YOLOv9 ONNX model files.
+2. Downloads ONNX models if they do not exist.
+2. Converts YOLOv7/YOLOv9 ONNX model to TensorRT engine with FP16 precision.
+4. Updates configurations in the Triton Server config files.
+5. Starts Triton Inference Server.
+
+
+> **Important Note:** Building TensorRT engines for each model can take more than 15 minutes. If TensorRT engines already exist, this script reuses them.  Users can utilize the `--force` flag to trigger a fresh rebuild of the models.
+
+
+
+#### Starting Triton Server using Models for Evaluation Purpose
+
+example:
+```bash
+cd /apps
+bash ./start-triton-server.sh  \
+--models yolov9-c \
+--model_optimization eval \
+--efficient_nms enable \
+--opt_batch_size 4 \
+--max_batch_size 4 \
+--instance_group 1 
+```
+
+#### Starting Triton Server using Models for Inference Purpose
+example:
+```bash
+cd /apps
+bash ./start-triton-server.sh  \
+--models yolov9-c \
+--model_optimization inference \
+--efficient_nms enable \
+--opt_batch_size 4 \
+--max_batch_size 4 \
+--instance_group 1 
+``` 
+
+#### Starting Triton Server using Models for Inference Purpose Without Efficient NMS
+example:
+```bash
+cd /apps
+bash ./start-triton-server.sh  \
+--models yolov9-c \
+--model_optimization inference \
+--efficient_nms disable \
+--opt_batch_size 4 \
+--max_batch_size 4 \
+--instance_group 1 
+``` 
+
+<br>After running script, you can verify the availability of the model by checking this output::
+```
++----------+---------+--------+
+| yolov7   | 1       | READY  |
+| yolov7x  | 1       | READY  |
+| yolov9-c | 1       | READY  |
+| yolov9-e | 1       | READY  |
++----------+---------+--------+
+```
 
 
 ## Manual ONNX YOLOv7/v9 exports
 ### Exporting YOLOv7 Series from PyTorch to ONNX With Efficient NMS plugin
 This repo does not export pytorch models to ONNX. <br>
-You can use the [Yolov7 Repository](https://github.com/WongKinYiu/yolov7) or the [Yolov7 Docker Image](https://github.com/levipereira/docker_images/tree/master/yolov7) for your convenience.
-
+You can use the [Official Yolov7 Repository](https://github.com/WongKinYiu/yolov7)  
 ``` bash 
 python export.py --weights yolov7.pt \
   --grid \
@@ -44,103 +132,21 @@ python export.py --weights yolov7.pt \
   --img-size 640 640
 ```
 
-### Exporting YOLOv9 Series from PyTorch (YOLOv9-C/E )  to ONNX With Efficient NMS plugin
+### Exporting YOLOv9 Series from PyTorch YOLOv9  to ONNX With Efficient NMS plugin
 This repo does not export pytorch models to ONNX. <br>
-You can use this repo [Yolov9 ](https://github.com/levipereira/yolov9)  
+You can use this repo [Unofficial Yolov9 ](https://github.com/levipereira/yolov9).  <br> Note: Official Yolov9 currently does not support support to export ONNX End2End
 
 ``` bash 
 python3 export.py \
    --weights ./yolov9-c.pt \
    --imgsz 640 \
-   --simplify \
    --topk-all 100 \
    --iou-thres 0.65 \
    --conf-thres 0.35 \
    --include onnx_end2end
-```
+``` 
 
-
-## Running NVIDIA Triton Inference Server Container with Docker
-
-### Usage
-
-``` bash
-bash ./start-container-triton-server.sh
-```
-
-Run this script to start the Triton Inference Server container.
-
-Note: This script must be executed on the host operating system.
-
-### Prerequisites
-
-- NVIDIA Docker must be installed.
-- NVIDIA GPU(s) should be available.
-
-
-## Deploying TensorRT Engine and Starting Triton-Server 
-
-
-### Usage Script (start-triton-server.sh) :
-
-``` bash
- Usage:
- ./start-triton-server.sh [--model_name <model_name>] [--efficient_nms <enable/disable>] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] [--force]
-
- - Use --model_name to specify the YOLO model name. Choose from 'yolov9-c', 'yolov9-e', 'yolov7', 'yolov7x'.
- - Use --efficient_nms to enable or disable load Models with TRT Efficient NMS plugin. Options: 'enable' or 'disable'.
- - Use --opt_batch_size to specify the optimal batch size for TensorRT engines.
- - Use --max_batch_size to specify the maximum batch size for TensorRT engines.
- - Use --instance_group to specify the number of TensorRT engine instances loaded per model in the Triton Server.
- - Use --force to rebuild TensorRT engines even if they already exist.
-```
-
-The `--force` flag must be utilized whenever the maximum batch size of the model is smaller than the current configuration.
-
-Example
-``` bash
-./start-triton-server01.sh \
- --models yolov7,yolov9-c \
- --efficient_nms enable \
- --opt_batch_size 4 \
- --max_batch_size 4 \
- --instance_group 1
-```
-This script converts ONNX models to TensorRT engines and starts the NVIDIA Triton Inference Server.
-
-Note: This script is intended to be executed from within the Docker Triton container.
-
-### Script Flow:
-1. Checks for the existence of YOLOv7/YOLOv9 ONNX model files.
-2. Downloads ONNX models if they do not exist.
-2. Converts YOLOv7/YOLOv9 ONNX model to TensorRT engine with FP16 precision.
-4. Updates the batch size configurations in the Triton Server config files.
-5. Starts Triton Inference Server with the converted models.
-
-<br>After running script, you can verify the availability of the model by checking this output::
-``` bash
-+----------+---------+--------+
-| Model    | Version | Status |
-+----------+---------+--------+
-| yolov7   | 1       | READY  |
-| yolov9-c | 1       | READY  |
-| yolov9-e | 1       | READY  |
-+----------+---------+--------+
-```
-
-## Model Configuration
-
-``` bash 
-models_config/
-├── yolov7
-│   └── config.pbtxt
-├── yolov9-c
-│   └── config.pbtxt
-└── yolov9-e
-    └── config.pbtxt
-
-```
-
+# Additional Configurations
 
 See [Triton Model Configuration Documentation](https://github.com/triton-inference-server/server/blob/main/docs/model_configuration.md#model-configuration) for more info.
 
@@ -202,10 +208,10 @@ dynamic_batching {
 
 ## Running Performance with Model Analyzer
 
-See [Triton Model Analyzer Documentation](https://github.com/triton-inference-server/server/blob/main/docs/model_analyzer.md#model-analyzer) for more info.
+See [Triton Model Analyzer Documentation](https://github.com/triton-inference-server/model_analyzer/tree/main/docs) for more info.
 
-example:
 
+On the Host Machine:
 
 ```bash
 docker run -it --ipc=host --net=host nvcr.io/nvidia/tritonserver:23.08-py3-sdk /bin/bash
