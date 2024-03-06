@@ -6,7 +6,7 @@ Evaluation test was perfomed using this [client](https://github.com/levipereira/
 
 [Models Details](https://github.com/levipereira/triton-server-yolo/releases/tag/v0.0.1)
 
-| Model | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| Model (ONNX) | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
 | :-- | :-: | :-: | :-: | :-: |
 | [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **52.8%** | **70.1%** | **57.7%** |
 | [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **55.4%** | **72.6%** | **60.3%** |
@@ -29,7 +29,7 @@ Evaluation test was perfomed using this [client](https://github.com/levipereira/
 
 
 # Evaluation Comparasion Pytorch vs TensorRT
-| Model Pytorch | Model TensorRT  | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| Model Pytorch | Model (ONNX) TensorRT  | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
 | :-------------- | :------------ | :-------: | :----------------: | :-------------------------: | :-------------------------: |
 | [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **-0.2%** | **-0.1%** | **-0.1%** |
 | [**YOLOv9-E**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-e-converted.pt) | [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **-0.2%** | **-0.2%** | **-0.3%** |
