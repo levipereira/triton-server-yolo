@@ -2,8 +2,8 @@
 
 This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only YOLOv7 and YOLOv9 are supported, but we plan to add support for YOLOv8 in the future.
 
-## Triton Client Repo
-To test and evaluation YOLO models, you can use this repo [triton-client-yolo]()
+## Triton Client Repository
+For testing and evaluating YOLO models, you can utilize the repository [triton-client-yolo](https://github.com/levipereira/triton-client-yolo)
 
 ## Description
 
