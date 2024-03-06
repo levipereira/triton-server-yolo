@@ -69,7 +69,7 @@ bash ./start-triton-server.sh
 
 
 
-#### Starting Triton Server using Models for Evaluation Purpose
+#### Starting Triton Server using Models for Evaluation Purposes
 
 example:
 ```bash
@@ -83,7 +83,7 @@ bash ./start-triton-server.sh  \
 --instance_group 1 
 ```
 
-#### Starting Triton Server using Models for Inference Purpose
+#### Starting Triton Server using Models for Inference Purposes
 example:
 ```bash
 cd /apps
@@ -96,7 +96,7 @@ bash ./start-triton-server.sh  \
 --instance_group 1 
 ``` 
 
-#### Starting Triton Server using Models for Inference Purpose Without Efficient NMS
+#### Starting Triton Server using models for Inference Purposes without Efficient NMS.
 example:
 ```bash
 cd /apps
