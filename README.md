@@ -17,7 +17,7 @@ It offers two types of ONNX models
 2. Model with Dynamic Batching only
   - The Non-Maximum Suppression must be handled by Client  
 
-Detailed Models can be found [here]()
+Detailed Models can be found [here](https://github.com/levipereira/triton-server-yolo/releases/tag/v0.0.1)
 
 
 ## Running NVIDIA Triton Inference Server Container with Docker
