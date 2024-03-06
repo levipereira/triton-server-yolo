@@ -1,6 +1,6 @@
 # Triton Server YOLO Models 
 
-This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only YOLOv7 and YOLOv9 are supported, but we plan to add support for YOLOv8 in the future.
+This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only [YOLOv7](https://github.com/WongKinYiu/yolov7), [YOLOv7 QAT](https://github.com/levipereira/yolo_deepstream/tree/main/yolov7_qat) and [YOLOv9](https://github.com/WongKinYiu/yolov9/) are supported, but we plan to add support for YOLOv8 in the future.
 
 ## Triton Client Repository
 For testing and evaluating YOLO models, you can utilize the repository [triton-client-yolo](https://github.com/levipereira/triton-client-yolo)
