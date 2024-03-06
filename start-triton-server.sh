@@ -8,7 +8,7 @@
 
 usage() {
     echo "Usage: $0 [--models <models>] [--model_mode <eval/inference>]  [--efficient_nms <enable/disable>] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] [--force] [--reset_all]"
-    echo "  - Use --models to specify the YOLO model name. Choose one or more with comma separated. yolov9-c,yolov9-e,yolov7,yolov7x"
+    echo "  - Use --models to specify the YOLO model name. Choose one or more with comma separated. yolov9-c,yolov9-e,yolov7,yolov7-qat,yolov7x,yolov7x-qat"
     echo "  - Use --model_mode - Model was optimized for EVALUATION and INFERENCE. Choose from 'eval' or 'inference'"
     echo "  - Use --efficient_nms to enable or disable TRT Efficient NMS plugin. Options: 'enable' or 'disable'."
     echo "  - Use --opt_batch_size to specify the optimal batch size for TensorRT engines."
@@ -17,6 +17,17 @@ usage() {
     echo "  - Use --force Rebuild TensorRT engines even if they already exist."
     echo "  - Use --reset_all Purge all existing TensorRT engines and their respective configurations."
 }
+
+function check_model() {
+    local model_names=("yolov9-c" "yolov9-e" "yolov7" "yolov7-qat" "yolov7x" "yolov7x-qat")
+    for model in "${model_names[@]}"; do
+        if [[ "$1" == "$model" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 
 # Function to calculate the available GPU memory
 function get_free_gpu_memory() {
@@ -45,6 +56,8 @@ if [[ $# -eq 0 ]]; then
     exit 0
 fi
 
+
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -59,6 +72,13 @@ while [[ $# -gt 0 ]]; do
             ;;
         --models)
             IFS=',' read -r -a model_names <<< "$2"
+            for model in "${model_names[@]}"; do
+                if ! check_model "$model"; then
+                    echo "Invalid model name: $model"
+                    usage
+                    exit 1
+                fi
+            done
             shift 2
             ;;
         --model_mode)
@@ -164,6 +184,10 @@ for model_name in "${model_names[@]}"; do
     fi
 
     if [[ $model_mode == "inference" && $efficient_nms == "disable" ]]; then
+        if [[ $model_name == *"qat"* ]]; then
+            echo "Model '$model_name' without '--efficient_nms enable' is not supported yet."
+            exit 1
+        fi
         onnx_file=./models_onnx/infer-${model_name}.onnx
         trt_file=${model_dir}/infer-${model_name}-max-batch-${max_batch_size}.engine
         file_pattern="${model_dir}/infer-${model_name}-max-batch-*.engine"
@@ -207,16 +231,28 @@ for model_name in "${model_names[@]}"; do
     fi
 
     if $build_file || $force_build; then
-        /usr/src/tensorrt/bin/trtexec \
-            --onnx="$onnx_file" \
-            --minShapes=images:1x3x640x640 \
-            --optShapes=images:${opt_batch_size}x3x640x640 \
-            --maxShapes=images:${max_batch_size}x3x640x640 \
-            --fp16 \
-            --workspace="$workspace" \
-            --saveEngine="$trt_file" \
-            --timingCacheFile="$model_dir/.timing.cache"
-
+        if [[ $model_name == *"qat"* ]]; then
+            /usr/src/tensorrt/bin/trtexec \
+                --onnx="$onnx_file" \
+                --minShapes=images:1x3x640x640 \
+                --optShapes=images:${opt_batch_size}x3x640x640 \
+                --maxShapes=images:${max_batch_size}x3x640x640 \
+                --fp16 \
+                --int8 \
+                --workspace="$workspace" \
+                --saveEngine="$trt_file" \
+                --timingCacheFile="$model_dir/.timing.cache"
+        else
+            /usr/src/tensorrt/bin/trtexec \
+                --onnx="$onnx_file" \
+                --minShapes=images:1x3x640x640 \
+                --optShapes=images:${opt_batch_size}x3x640x640 \
+                --maxShapes=images:${max_batch_size}x3x640x640 \
+                --fp16 \
+                --workspace="$workspace" \
+                --saveEngine="$trt_file" \
+                --timingCacheFile="$model_dir/.timing.cache"
+        fi
         if [[ $? -ne 0 ]]; then
             echo "Conversion of $model_name ONNX model to TensorRT engine failed"
             exit 1
