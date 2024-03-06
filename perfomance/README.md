@@ -20,7 +20,7 @@ Detailed reports will be made available in the coming days, providing comprehens
 - Memory Clock Rate: 10.501 GHz
 
 
-# YOLO v8 vs v9 Series Models Performance Results
+# YOLO v7 vs v9 Series Models Performance Results
 
 - **Average time**: Represents the total sum of layer latencies when profiling layers individually.
 - **Latency**: Refers to the minimum, maximum, mean, median, and 99th percentile of the engine latency measurements, captured without profiling layers.
