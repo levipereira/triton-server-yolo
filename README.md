@@ -20,7 +20,7 @@ It offers two types of ONNX models
 Detailed Models can be found [here](https://github.com/levipereira/triton-server-yolo/releases/tag/v0.0.1)
 
 
-## Running NVIDIA Triton Inference Server Container with Docker
+## Starting NVIDIA Triton Inference Server Container with Docker
 
 ### Prerequisites
 
@@ -35,12 +35,16 @@ cd triton-server-yolo
 # Start Docker container
 bash ./start-container-triton-server.sh
 ```
+## Starting Triton Inference Server 
 
 Inside Docker Container use `bash ./start-triton-server.sh ` 
 
 #### Script Usage
 This script is used to build TensorRT engines and start Triton-Server for YOLO models.
-`bash ./start-triton-server.sh `
+```
+cd /apps
+bash ./start-triton-server.sh
+```
 
 ## Script Options
 - **--models**: Specify the YOLO model name(s). Choose one or more with comma separation. Available options: `yolov9-c`, `yolov9-e`, `yolov7`, `yolov7x`.
