@@ -1,5 +1,46 @@
 # Perfomance Test using GPU RTX 4090 on AMD Ryzen 7 3700X 8-Core/ 16GB RAM
 
+
+# Evaluation Test on TensorRT 
+Evaluation test was perfomed using this [client](https://github.com/levipereira/triton-client-yolo?tab=readme-ov-file#evaluating-coco-dataset-on-yolo-models) 
+
+[Models Details](https://github.com/levipereira/triton-server-yolo/releases/tag/v0.0.1)
+
+| Model | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| :-- | :-: | :-: | :-: | :-: |
+| [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **52.8%** | **70.1%** | **57.7%** |
+| [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **55.4%** | **72.6%** | **60.3%** |
+|  |  |  |  |  |  |  |
+| [**YOLOv7 (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-end2end.onnx) | 640 | **51.1%** | **69.3%** | **55.6%** |
+| [**YOLOv7x (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-end2end.onnx) | 640 | **52.9%** | **70.8%** | **57.4%** |
+|  |  |  |  |  |  |  |
+| [**YOLOv7-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-qat-end2end.onnx) | 640 | **50.9%** | **69.2%** | **55.5%** |
+| [**YOLOv7x-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-qat-end2end.onnx) | 640 | **52.5%** | **70.6%** | **57.3%** |
+
+
+# Evaluation Test original (Pytorch)
+| Model | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| :-- | :-: | :-: | :-: | :-: |
+| [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | 640 | **53.0%** | **70.2%** | **57.8%** | 
+| [**YOLOv9-E**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-e-converted.pt) | 640 | **55.6%** | **72.8%** | **60.6%** | 
+|  |  |  |  |  |  |  |
+| [**YOLOv7**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt) | 640 | **51.4%** | **69.7%** | **55.9%** | 
+| [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt) | 640 | **53.1%** | **71.2%** | **57.8%** | 
+
+
+# Evaluation Comparasion Pytorch vs TensorRT
+| Model Pytorch | Model TensorRT  | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| :-------------- | :------------ | :-------: | :----------------: | :-------------------------: | :-------------------------: |
+| [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **-0.2%** | **-0.1%** | **-0.1%** |
+| [**YOLOv9-E**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-e-converted.pt) | [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **-0.2%** | **-0.2%** | **-0.3%** |
+| [**YOLOv7**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt) | [**YOLOv7 (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-end2end.onnx) | 640 | **-0.3%** | **-0.4%** | **-0.3%** |
+| [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt) | [**YOLOv7x (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-end2end.onnx) | 640 | **-0.2%** | **-0.4%** | **-0.4%** |
+| [**YOLOv7**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt) | [**YOLOv7-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-qat-end2end.onnx) | 640 | **-0.5%** | **-0.5%** | **-0.4%** |
+| [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt) | [**YOLOv7x-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-qat-end2end.onnx) | 640 | **-0.2%** | **-0.4%** | **-0.4%** |
+
+
+
+
 # Model Performance Evaluation using TensorRT engine 
 All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching enabled. Profiling was conducted using TensorRT Engine Explorer (TREx).
 
@@ -26,9 +67,6 @@ Detailed reports will be made available in the coming days, providing comprehens
 - **Latency**: Refers to the minimum, maximum, mean, median, and 99th percentile of the engine latency measurements, captured without profiling layers.
 - **Throughput**: Measured in inferences per second (IPS).
 
-
-
-# Performance Summary Tables
 
 ## Throughput and Average Time
 
