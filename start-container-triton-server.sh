@@ -35,6 +35,5 @@ docker run --gpus all \
  -p8001:8001 \
  -p8002:8002 \
  -v $(pwd):/apps \
- -v /storage/yolov9/project_deepstream/Docker-Yolov9-Nvidia-Kit/experiments:/apps/experiments \
  -w /apps  \
  nvcr.io/nvidia/tritonserver:23.08-py3
