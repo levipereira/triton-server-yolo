@@ -3,7 +3,7 @@
 # Model Performance Evaluation using TensorRT engine 
 All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching and Efficient NMS plugin enabled. 
 
-All models was converted (Re-parameterization), optimized for inference.
+Only models that were converted (re-parameterized) were used.
 
 # Evaluation Test on TensorRT 
 Evaluation test was perfomed using this [client](https://github.com/levipereira/triton-client-yolo?tab=readme-ov-file#evaluating-coco-dataset-on-yolo-models) 
