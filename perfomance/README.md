@@ -1,9 +1,9 @@
 # Perfomance Test using GPU RTX 4090 on AMD Ryzen 7 3700X 8-Core/ 16GB RAM
 
 # Model Performance Evaluation using TensorRT engine 
-All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching enabled. Profiling was conducted using TensorRT Engine Explorer (TREx).
+All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching and Efficient NMS plugin enabled. 
 
-All models was Converted (Re-parameterization), optimized for inference.
+All models was converted (Re-parameterization), optimized for inference.
 
 # Evaluation Test on TensorRT 
 Evaluation test was perfomed using this [client](https://github.com/levipereira/triton-client-yolo?tab=readme-ov-file#evaluating-coco-dataset-on-yolo-models) 
@@ -47,6 +47,7 @@ Evaluation test was perfomed using this [client](https://github.com/levipereira/
 
 
 # Model Performance Latency using TensorRT engine 
+All models were sourced from the original repository and subsequently converted to ONNX format with dynamic batching enabled. Profiling was conducted using TensorRT Engine Explorer (TREx).
 
 Detailed reports will be made available in the coming days, providing comprehensive insights into the performance metrics and optimizations achieved.
 
