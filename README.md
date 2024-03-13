@@ -122,7 +122,7 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_optimization eval \
+--model_mode eval \
 --efficient_nms enable \
 --opt_batch_size 4 \
 --max_batch_size 4 \
@@ -135,7 +135,7 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_optimization inference \
+--model_mode inference \
 --efficient_nms enable \
 --opt_batch_size 4 \
 --max_batch_size 4 \
@@ -148,7 +148,7 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_optimization inference \
+--model_mode inference \
 --efficient_nms disable \
 --opt_batch_size 4 \
 --max_batch_size 4 \
