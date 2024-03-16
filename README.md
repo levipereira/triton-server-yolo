@@ -1,11 +1,9 @@
 # Triton Server YOLO Models 
 
-This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only [YOLOv7](https://github.com/WongKinYiu/yolov7), [YOLOv7 QAT](https://github.com/levipereira/yolo_deepstream/tree/main/yolov7_qat) and [YOLOv9](https://github.com/WongKinYiu/yolov9/) are supported, but we plan to add support for YOLOv8 in the future.
+This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only [YOLOv7](https://github.com/WongKinYiu/yolov7), [YOLOv7 QAT](https://github.com/levipereira/yolo_deepstream/tree/main/yolov7_qat), [YOLOv9](https://github.com/WongKinYiu/yolov9/) and [YOLOv9 QAT](https://github.com/levipereira/yolov9/tree/yolov9-qat) are supported, but we plan to add support for YOLOv8 in the future.
 
 ## Triton Client Repository
 For testing and evaluating YOLO models, you can utilize the repository [triton-client-yolo](https://github.com/levipereira/triton-client-yolo)
-
-
 
 
 # Evaluation Test on TensorRT 
@@ -16,7 +14,9 @@ Evaluation test was perfomed using this [client](https://github.com/levipereira/
 | Model ONNX > TensorRT | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
 | :-- | :-: | :-: | :-: | :-: |
 | [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **52.8%** | **70.1%** | **57.7%** |
+| [**YOLOv9-C QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-qat-end2end.onnx) | 640 | **52.8%** | **69.9%** | **57.7%** |
 | [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **55.4%** | **72.6%** | **60.3%** |
+| [**YOLOv9-E QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-qat-end2end.onnx) | 640 | **55.3%** | **72.4%** | **60.2%** |
 |  |  |  |  |  |  |  |
 | [**YOLOv7 (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-end2end.onnx) | 640 | **51.1%** | **69.3%** | **55.6%** |
 | [**YOLOv7x (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-end2end.onnx) | 640 | **52.9%** | **70.8%** | **57.4%** |

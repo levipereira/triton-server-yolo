@@ -8,7 +8,7 @@
 
 usage() {
     echo "Usage: $0 [--models <models>] [--model_mode <eval/inference>]  [--efficient_nms <enable/disable>] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] [--force] [--reset_all]"
-    echo "  - Use --models to specify the YOLO model name. Choose one or more with comma separated. yolov9-c,yolov9-e,yolov7,yolov7-qat,yolov7x,yolov7x-qat"
+    echo "  - Use --models to specify the YOLO model name. Choose one or more with comma separated. yolov9-c,yolov9-c-qat,yolov9-e,yolov9-e-qat,yolov7,yolov7-qat,yolov7x,yolov7x-qat"
     echo "  - Use --model_mode - Model was optimized for EVALUATION and INFERENCE. Choose from 'eval' or 'inference'"
     echo "  - Use --efficient_nms to enable or disable TRT Efficient NMS plugin. Options: 'enable' or 'disable'."
     echo "  - Use --opt_batch_size to specify the optimal batch size for TensorRT engines."
@@ -19,7 +19,7 @@ usage() {
 }
 
 function check_model() {
-    local model_names=("yolov9-c" "yolov9-e" "yolov7" "yolov7-qat" "yolov7x" "yolov7x-qat")
+    local model_names=("yolov9-c" "yolov9-c-qat" "yolov9-e" "yolov9-e-qat" "yolov7" "yolov7-qat" "yolov7x" "yolov7x-qat")
     for model in "${model_names[@]}"; do
         if [[ "$1" == "$model" ]]; then
             return 0
