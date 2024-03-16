@@ -184,7 +184,6 @@ python export.py --weights yolov7.pt \
 
 ### Exporting YOLOv9 Series from PyTorch YOLOv9  to ONNX With Efficient NMS plugin
 This repo does not export pytorch models to ONNX. <br>
-You can use this repo [Unofficial Yolov9 ](https://github.com/levipereira/yolov9).  <br> Note: Official Yolov9 currently does not support support to export ONNX End2End
 
 ``` bash 
 python3 export.py \
