@@ -29,11 +29,25 @@ function check_model() {
 }
 
 
+# Function to find a unique directory name in models_trash
+get_unique_trash_dir_name() {
+    local base_name="$1"
+    local i=1
+    local new_dir_name="$base_name"
+
+    while [ -d "$trash_dir/$new_dir_name" ]; do
+        new_dir_name="${base_name}_${i}"
+        ((i++))
+    done
+
+    echo "$new_dir_name"
+}
+
 # Function to calculate the available GPU memory
 function get_free_gpu_memory() {
-    # Get the total memory and used memory from nvidia-smi
-    local total_memory=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | awk '{print $1}')
-    local used_memory=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | awk '{print $1}')
+    # Get the total memory and used memory from nvidia-smi for GPU 0
+    local total_memory=$(nvidia-smi --id=0 --query-gpu=memory.total --format=csv,noheader,nounits | awk '{print $1}')
+    local used_memory=$(nvidia-smi --id=0 --query-gpu=memory.used --format=csv,noheader,nounits | awk '{print $1}')
 
     # Calculate free memory
     local free_memory=$((total_memory - used_memory))
@@ -55,7 +69,6 @@ if [[ $# -eq 0 ]]; then
     usage
     exit 0
 fi
-
 
 
 # Parse command line arguments
@@ -128,6 +141,13 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# Check if all flags are set
+if [[ -z "$model_mode" || -z "$efficient_nms" || -z "$opt_batch_size" || -z "$max_batch_size" || -z "$instance_group" || ${#model_names[@]} -eq 0 ]]; then
+    echo "Missing required flag(s)."
+    usage
+    exit 1
+fi
+
 
 # Check if reset_all is true
 if $reset_all; then
@@ -161,6 +181,24 @@ fi
 if [[ ${#model_names[@]} -eq 0 ]]; then
     model_names=("yolov9-c" "yolov9-e" "yolov7" "yolov7x")
 fi
+
+trash_dir="./models_trash"
+mkdir -p "$trash_dir"
+
+for model_dir in ./models/*; do
+    if [ -d "$model_dir" ]; then
+        # Extract model_name from the directory path
+        model_name=$(basename "$model_dir")
+        if [[ ! " ${model_names[@]} " =~ " $model_name " ]]; then
+            echo "Model name $model_name is not in the list."
+            echo "Moving directory $model_dir to models_trash."
+            # Get a unique name for the trash directory
+            new_trash_dir_name=$(get_unique_trash_dir_name "$model_name")
+            mv "$model_dir" "$trash_dir/$new_trash_dir_name"
+            echo "Directory $model_dir moved to $trash_dir/$new_trash_dir_name."
+        fi
+    fi
+done
 
 
 
@@ -240,8 +278,7 @@ for model_name in "${model_names[@]}"; do
                 --fp16 \
                 --int8 \
                 --workspace="$workspace" \
-                --saveEngine="$trt_file" \
-                --timingCacheFile="$model_dir/.timing.cache"
+                --saveEngine="$trt_file"  
         else
             /usr/src/tensorrt/bin/trtexec \
                 --onnx="$onnx_file" \
@@ -250,8 +287,7 @@ for model_name in "${model_names[@]}"; do
                 --maxShapes=images:${max_batch_size}x3x640x640 \
                 --fp16 \
                 --workspace="$workspace" \
-                --saveEngine="$trt_file" \
-                --timingCacheFile="$model_dir/.timing.cache"
+                --saveEngine="$trt_file"  
         fi
         if [[ $? -ne 0 ]]; then
             echo "Conversion of $model_name ONNX model to TensorRT engine failed"
@@ -259,6 +295,7 @@ for model_name in "${model_names[@]}"; do
         fi
     fi
 done
+
 
 # Update Triton server configuration files
 for model_name in "${model_names[@]}"; do
