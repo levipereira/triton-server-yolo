@@ -301,6 +301,7 @@ for model_name in "${model_names[@]}"; do
                 --maxShapes=images:${max_batch_size}x3x640x640 \
                 --fp16 \
                 --int8 \
+                --useCudaGraph \
                 --workspace="$workspace" \
                 --saveEngine="$trt_file"  
         else
@@ -310,6 +311,7 @@ for model_name in "${model_names[@]}"; do
                 --optShapes=images:${opt_batch_size}x3x640x640 \
                 --maxShapes=images:${max_batch_size}x3x640x640 \
                 --fp16 \
+                --useCudaGraph \
                 --workspace="$workspace" \
                 --saveEngine="$trt_file"  
         fi
