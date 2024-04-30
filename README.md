@@ -13,9 +13,12 @@ Evaluation test was perfomed using this [client](https://github.com/levipereira/
 
 | Model ONNX > TensorRT | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
 | :-- | :-: | :-: | :-: | :-: |
-| [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **52.8%** | **70.1%** | **57.7%** |
-| [**YOLOv9-C QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-qat-end2end.onnx) | 640 | **52.8%** | **69.9%** | **57.7%** |
+| [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **52.9%** | **70.1%** | **57.7%** |
+| [**YOLOv9-C ReLU (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-relu-end2end.onnx) | 640 | **51.7%** | **68.8%** | **56.3%** |
 | [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **55.4%** | **72.6%** | **60.3%** |
+|  |  |  |  |  |  |  |
+| [**YOLOv9-C QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-qat-end2end.onnx) | 640 | **52.7%** | **69.8%** | **57.5%** |
+| [**YOLOv9-C ReLU QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-relu-qat-end2end.onnx) | 640 | **51.6%** | **69.7%** | **56.3%** |
 | [**YOLOv9-E QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-qat-end2end.onnx) | 640 | **55.3%** | **72.4%** | **60.2%** |
 |  |  |  |  |  |  |  |
 | [**YOLOv7 (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-end2end.onnx) | 640 | **51.1%** | **69.3%** | **55.6%** |
