@@ -1,0 +1,49 @@
+name: "model_template_name"
+platform: "tensorrt_plan"
+max_batch_size: 8
+default_model_filename: "model_template_file"
+input [
+  {
+    name: "images"
+    data_type: TYPE_FP32
+    dims: [ 3, 640, 640 ]
+  }
+]
+output [
+  {
+    name: "num_dets"
+    data_type: TYPE_INT32
+    dims: [ 1 ]
+  },
+  {
+    name: "det_boxes"
+    data_type: TYPE_FP32
+    dims: [ TOPK, 4 ]
+  },
+  {
+    name: "det_scores"
+    data_type: TYPE_FP32
+    dims: [ TOPK ]
+  },
+  {
+    name: "det_classes"
+    data_type: TYPE_INT32
+    dims: [ TOPK ]
+  },
+  {
+    name: "det_indices"
+    data_type: TYPE_INT32
+    dims: [ TOPK ]
+  }
+]
+instance_group [
+    {
+      count: 4
+      kind: KIND_GPU
+      gpus: [ 0 ]
+    }
+]
+version_policy: { latest: { num_versions: 1}}
+dynamic_batching {
+  max_queue_delay_microseconds: 0
+}
