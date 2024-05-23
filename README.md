@@ -114,7 +114,7 @@ bash ./start-triton-server.sh
 `yolov7-qat`<br> 
 `yolov7x`<br> 
 `yolov7x-qat`
- - **--model_mode**: Use Model ONNX optimized for EVALUATION or INFERENCE. Choose from `'eval'` or `'inference'`.
+ - **--model_mode**: Use Model ONNX optimized for EVALUATION or INFERENCE. Choose from `'eval'` or `'infer'`.
 - **--plugin**:  Options: `'efficientNMS'` or `'yoloNMS'` or `'none'`.
 - **--opt_batch_size**: Specify the optimal batch size for TensorRT engines.
 - **--max_batch_size**: Specify the maximum batch size for TensorRT engines.
@@ -155,7 +155,7 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_mode inference \
+--model_mode infer \
 --plugin efficientNMS \
 --opt_batch_size 4 \
 --max_batch_size 4 \
@@ -168,7 +168,7 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_mode inference \
+--model_mode infer \
 --plugin none \
 --opt_batch_size 4 \
 --max_batch_size 4 \
