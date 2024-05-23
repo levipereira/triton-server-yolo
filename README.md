@@ -1,6 +1,9 @@
 # Triton Server YOLO Models 
 
-This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only [YOLOv7](https://github.com/WongKinYiu/yolov7), [YOLOv7 QAT](https://github.com/levipereira/yolo_deepstream/tree/main/yolov7_qat), [YOLOv9](https://github.com/WongKinYiu/yolov9/) and [YOLOv9 QAT](https://github.com/levipereira/yolov9/tree/yolov9-qat) are supported, but we plan to add support for YOLOv8 in the future.
+This repository serves as an example of deploying the YOLO models on Triton Server for performance and testing purposes. It includes support for applications developed using Nvidia DeepStream.<br>Currently, only [YOLOv7](https://github.com/WongKinYiu/yolov7), [YOLOv7 QAT](https://github.com/levipereira/yolo_deepstream/tree/main/yolov7_qat),  [YOLOv8](https://github.com/levipereira/ultralytics),  [YOLOv9](https://github.com/WongKinYiu/yolov9/) and [YOLOv9 QAT](https://github.com/levipereira/yolov9/tree/yolov9-qat) are supported.
+
+> For YOLOv8 Models we are using custom plugin YOLO_NMS_TRT, the End2End implementation is not available on official Repo. Only on https://github.com/levipereira/ultralytics
+
 
 ## Triton Client Repository
 For testing and evaluating YOLO models, you can utilize the repository [triton-client-yolo](https://github.com/levipereira/triton-client-yolo)
@@ -10,60 +13,45 @@ For testing and evaluating YOLO models, you can utilize the repository [triton-c
 Evaluation test was perfomed using this [client](https://github.com/levipereira/triton-client-yolo?tab=readme-ov-file#evaluating-coco-dataset-on-yolo-models)
 
 [Models Details](https://github.com/levipereira/triton-server-yolo/releases/tag/v0.0.1)
-
+## YOLOv9
 | Model ONNX > TensorRT | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
 | :-- | :-: | :-: | :-: | :-: |
 | [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | 640 | **52.9%** | **70.1%** | **57.7%** |
 | [**YOLOv9-C ReLU (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-relu-end2end.onnx) | 640 | **51.7%** | **68.8%** | **56.3%** |
 | [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | 640 | **55.4%** | **72.6%** | **60.3%** |
-|  |  |  |  |  |  |  |
 | [**YOLOv9-C QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-qat-end2end.onnx) | 640 | **52.7%** | **69.8%** | **57.5%** |
 | [**YOLOv9-C ReLU QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-relu-qat-end2end.onnx) | 640 | **51.6%** | **69.7%** | **56.3%** |
 | [**YOLOv9-E QAT**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-qat-end2end.onnx) | 640 | **55.3%** | **72.4%** | **60.2%** |
-|  |  |  |  |  |  |  |
+
+## YOLOv8
+| Model ONNX > TensorRT | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| :-- | :-: | :-: | :-: | :-: |
+| [**YOLOv8n (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov8n-trt.onnx) | 640 | **37.3%** | **52.6%** | **40.5%** |
+| [**YOLOv8s (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov8s-trt.onnx) | 640 | **44.9%** | **61.6%** | **48.6%** |
+| [**YOLOv8m (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov8m-trt.onnx) | 640 | **50.1%** | **67%** | **54.6%** |
+| [**YOLOv8l (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov8l-trt.onnx) | 640 | **52.7%** | **69.6%** | **57.4%** |
+| [**YOLOv8x (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov8x-trt.onnx) | 640 | **53.7%** | **70.7%** | **58.6%** |
+
+## YOLOv7
+| Model ONNX > TensorRT | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
+| :-- | :-: | :-: | :-: | :-: |
 | [**YOLOv7 (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-end2end.onnx) | 640 | **51.1%** | **69.3%** | **55.6%** |
 | [**YOLOv7x (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-end2end.onnx) | 640 | **52.9%** | **70.8%** | **57.4%** |
-|  |  |  |  |  |  |  |
 | [**YOLOv7-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-qat-end2end.onnx) | 640 | **50.9%** | **69.2%** | **55.5%** |
 | [**YOLOv7x-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-qat-end2end.onnx) | 640 | **52.5%** | **70.6%** | **57.3%** |
-
-
-# Evaluation Test original (Pytorch)
-| Model | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
-| :-- | :-: | :-: | :-: | :-: |
-| [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | 640 | **53.0%** | **70.2%** | **57.8%** | 
-| [**YOLOv9-E**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-e-converted.pt) | 640 | **55.6%** | **72.8%** | **60.6%** | 
-|  |  |  |  |  |  |  |
-| [**YOLOv7**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt) | 640 | **51.4%** | **69.7%** | **55.9%** | 
-| [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt) | 640 | **53.1%** | **71.2%** | **57.8%** | 
-
-
-# Evaluation Comparasion TensorRT vs Pytorch
-| Model ONNX > TensorRT   |Model Pytorch   | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> |
-| :-------------- | :------------ | :-------: | :----------------: | :-------------------------: | :-------------------------: |
-| [**YOLOv9-C (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-c-end2end.onnx) | [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | 640 | **-0.2%** | **-0.1%** | **-0.1%** |
-| [**YOLOv9-E (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov9-e-end2end.onnx) | [**YOLOv9-E**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-e-converted.pt) | 640 | **-0.2%** | **-0.2%** | **-0.3%** |
-|  |  |  |  |  |  |  |
-| [**YOLOv7 (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-end2end.onnx) | [**YOLOv7**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt)  | 640 | **-0.3%** | **-0.4%** | **-0.3%** |
-| [**YOLOv7x (FP16)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-end2end.onnx) | [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt)  | 640 | **-0.2%** | **-0.4%** | **-0.4%** |
-|  |  |  |  |  |  |  |
-| [**YOLOv7-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7-qat-end2end.onnx) | [**YOLOv7**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt)  | 640 | **-0.5%** | **-0.5%** | **-0.4%** |
-| [**YOLOv7x-QAT (INT8)**](https://github.com/levipereira/triton-server-yolo/releases/download/v0.0.1/eval-yolov7x-qat-end2end.onnx) | [**YOLOv7-X**](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7x.pt) | 640 | **-0.2%** | **-0.4%** | **-0.4%** |
-
-
-
 
 
 ## Description
 
 This repository utilizes exported models using ONNX. 
-It offers two types of ONNX models
-1. Model with End2End, Efficient NMS plugin enabled <br>
-  It offers two types of End2End models: 
+It offers two types of ONNX models 
+
+1. Model with Dynamic Shape and Dynamic Batch Size with End2End using Efficient NMS or YOLO_NMS_TRT plugin <br>
+  It offers two types of configuration models: 
   - A model optimized for evaluation (`--topk-all 300 --iou-thres 0.7 --conf-thres 0.001`).
   - A model optimized for inference  (`--topk-all 100 --iou-thres 0.45 --conf-thres 0.25`).
 
-2. Model with Dynamic Batching only
+2. Model with Dynamic Shapes and Dynamic Batching without End2End.
   - The Non-Maximum Suppression must be handled by Client  
 
 Detailed Models can be found [here](https://github.com/levipereira/triton-server-yolo/releases/tag/v0.0.1)
@@ -84,6 +72,19 @@ cd triton-server-yolo
 # Start Docker container
 bash ./start-container-triton-server.sh
 ```
+
+### Install compiled `libnvinfer_plugin` with YoloNMS
+  1. Download and install compiled   `libnvinfer_plugin`
+      ```bash
+      cd TensorRTPlugin
+      ./patch_libnvinfer.sh --download
+      cd ..
+      ```
+  2. Or build from source the  `libnvinfer_plugin` <br>
+     [TensorRTPlugin](TensorRTPlugin)
+     
+
+
 ## Starting Triton Inference Server 
 
 Inside Docker Container use `bash ./start-triton-server.sh ` 
@@ -95,10 +96,26 @@ cd /apps
 bash ./start-triton-server.sh
 ```
 
+
 ## Script Options
-- **--models**: Specify the YOLO model name(s). Choose one or more with comma separation. Available options: `yolov9-c`, `yolov9-e`, `yolov7`, `yolov7x`.
-- **--model_mode**: Use Model ONNX optimized for EVALUATION or INFERENCE. Choose from `'eval'` or `'inference'`.
-- **--efficient_nms**: Use the TRT Efficient NMS plugin.. Options: `'enable'` or `'disable'`.
+- **--models**: Specify the YOLO model name(s). Choose one or more with comma separation. Available options: <br>
+`yolov9-c`<br>
+`yolov9-c-relu`<br> 
+`yolov9-c-qat`<br> 
+`yolov9-c-relu-qat`<br> 
+`yolov9-e`<br>
+`yolov9-e-qat`<br> 
+`yolov8n`<br> 
+`yolov8s`<br> 
+`yolov8m`<br> 
+`yolov8l`<br>
+`yolov8x`<br> 
+`yolov7`<br> 
+`yolov7-qat`<br> 
+`yolov7x`<br> 
+`yolov7x-qat`
+ - **--model_mode**: Use Model ONNX optimized for EVALUATION or INFERENCE. Choose from `'eval'` or `'infer'`.
+- **--plugin**:  Options: `'efficientNMS'` or `'yoloNMS'` or `'none'`.
 - **--opt_batch_size**: Specify the optimal batch size for TensorRT engines.
 - **--max_batch_size**: Specify the maximum batch size for TensorRT engines.
 - **--instance_group**: Specify the number of TensorRT engine instances loaded per model in the Triton Server.
@@ -126,7 +143,7 @@ cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
 --model_mode eval \
---efficient_nms enable \
+--plugin efficientNMS \
 --opt_batch_size 4 \
 --max_batch_size 4 \
 --instance_group 1 
@@ -138,8 +155,8 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_mode inference \
---efficient_nms enable \
+--model_mode infer \
+--plugin efficientNMS \
 --opt_batch_size 4 \
 --max_batch_size 4 \
 --instance_group 1 
@@ -151,8 +168,8 @@ example:
 cd /apps
 bash ./start-triton-server.sh  \
 --models yolov9-c,yolov7 \
---model_mode inference \
---efficient_nms disable \
+--model_mode infer \
+--plugin none \
 --opt_batch_size 4 \
 --max_batch_size 4 \
 --instance_group 1 
@@ -184,6 +201,15 @@ python export.py --weights yolov7.pt \
   --conf-thres 0.35 \
   --img-size 640 640
 ```
+
+### Exporting YOLOv8 Series from PyTorch YOLOv8 to ONNX With YOLO_NMS plugin
+This repo does not export pytorch models to ONNX. <br>
+
+``` bash 
+from ultralytics import YOLO
+model = YOLO("yolov8n.pt") 
+model.export(format="onnx_trt")
+``` 
 
 ### Exporting YOLOv9 Series from PyTorch YOLOv9  to ONNX With Efficient NMS plugin
 This repo does not export pytorch models to ONNX. <br>

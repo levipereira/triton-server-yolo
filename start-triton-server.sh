@@ -27,14 +27,14 @@
 # Script to convert ONNX models to TensorRT engines and start NVIDIA Triton Inference Server.
 
 # Usage:
-# ./start-triton-server.sh [--models <models>] [--efficient_nms <enable/disable>] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] 
+# ./start-triton-server.sh [--models <models>] [--plugin efficientNMS/yoloNMS/none] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] 
  
 
 usage() {
-    echo "Usage: $0 [--models <models>] [--model_mode <eval/inference>]  [--efficient_nms <enable/disable>] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] [--force] [--reset_all]"
-    echo "  - Use --models to specify the YOLO model name. Choose one or more with comma separated. yolov9-c,yolov9-c-relu,yolov9-c-qat,yolov9-c-relu-qat,yolov9-e,yolov9-e-qat,yolov7,yolov7-qat,yolov7x,yolov7x-qat"
-    echo "  - Use --model_mode - Model was optimized for EVALUATION and INFERENCE. Choose from 'eval' or 'inference'"
-    echo "  - Use --efficient_nms to enable or disable TRT Efficient NMS plugin. Options: 'enable' or 'disable'."
+    echo "Usage: $0 [--models <models>] [--model_mode <eval/infer>]  [--plugin efficientNMS/yoloNMS/none] [--opt_batch_size <number>] [--max_batch_size <number>] [--instance_group <number>] [--force] [--reset_all]"
+    echo "  - Use --models to specify the YOLO model name. Choose one or more with comma separated. yolov9-c,yolov9-c-relu,yolov9-c-qat,yolov9-c-relu-qat,yolov9-e,yolov9-e-qat,yolov8n,yolov8s,yolov8m,yolov8l,yolov8x,yolov7,yolov7-qat,yolov7x,yolov7x-qat"
+    echo "  - Use --model_mode - Model was optimized for EVALUATION and INFERENCE. Choose from 'eval' or 'infer'"
+    echo "  - Use --plugin - efficientNMS , yoloNMS or none"
     echo "  - Use --opt_batch_size to specify the optimal batch size for TensorRT engines."
     echo "  - Use --max_batch_size to specify the maximum batch size for TensorRT engines."
     echo "  - Use --instance_group to specify the number of TensorRT engine instances loaded per model in the Triton Server."
@@ -43,7 +43,7 @@ usage() {
 }
 
 function check_model() {
-    local model_names=("yolov9-c" "yolov9-c-relu"  "yolov9-c-qat" "yolov9-c-relu-qat" "yolov9-e" "yolov9-e-qat" "yolov7" "yolov7-qat" "yolov7x" "yolov7x-qat")
+    local model_names=("yolov9-c" "yolov9-c-relu"  "yolov9-c-qat" "yolov9-c-relu-qat" "yolov9-e" "yolov9-e-qat" "yolov8n" "yolov8s" "yolov8m" "yolov8l" "yolov8x" "yolov7" "yolov7-qat" "yolov7x" "yolov7x-qat")
     for model in "${model_names[@]}"; do
         if [[ "$1" == "$model" ]]; then
             return 0
@@ -82,8 +82,7 @@ function get_free_gpu_memory() {
 max_batch_size=""
 opt_batch_size=""
 instance_group=""
-model_onnx_end2end=true
-efficient_nms=""
+trt_plugin=""
 force_build=false
 reset_all=false
 model_mode=""
@@ -120,16 +119,16 @@ while [[ $# -gt 0 ]]; do
             ;;
         --model_mode)
             model_mode="$2"
-            if [[ "$model_mode" != "eval" && "$model_mode" != "inference" ]]; then
-                echo "Invalid value for --model_mode. Choose 'eval' or 'inference'."
+            if [[ "$model_mode" != "eval" && "$model_mode" != "infer" ]]; then
+                echo "Invalid value for --model_mode. Choose 'eval' or 'infer'."
                 exit 1
             fi
             shift 2
             ;;
-        --efficient_nms)
-            efficient_nms="$2"
-            if [[ "$efficient_nms" != "enable" && "$efficient_nms" != "disable" ]]; then
-                echo "Invalid value for --efficient_nms. Choose 'enable' or 'disable'."
+        --plugin)
+            trt_plugin="$2"
+            if [[ "$trt_plugin" != "efficientNMS" && "$trt_plugin" != "yoloNMS" && "$trt_plugin" != "none" ]]; then
+                echo "Invalid value for --plugin. Choose 'efficientNMS' or 'yoloNMS' or 'none'."
                 exit 1
             fi
             shift 2
@@ -166,7 +165,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Check if all flags are set
-if [[ -z "$model_mode" || -z "$efficient_nms" || -z "$opt_batch_size" || -z "$max_batch_size" || -z "$instance_group" || ${#model_names[@]} -eq 0 ]]; then
+if [[ -z "$model_mode" || -z "$trt_plugin" || -z "$opt_batch_size" || -z "$max_batch_size" || -z "$instance_group" || ${#model_names[@]} -eq 0 ]]; then
     echo "Missing required flag(s)."
     usage
     exit 1
@@ -194,16 +193,9 @@ fi
 # Calculate workspace size based on free GPU memory
 workspace=$(get_free_gpu_memory)
 
-# Model ONNX end2end flag
-if [[ "$model_onnx_end2end" == true ]]; then
-    model_config_template="./models_config/yolo_onnx_end2end.pbtxt"
-else
-    model_config_template="./models_config/yolov9_onnx.pbtxt"
-fi
-
 # Model List
 if [[ ${#model_names[@]} -eq 0 ]]; then
-    model_names=("yolov9-c" "yolov9-c-relu" "yolov9-e" "yolov7" "yolov7x")
+    model_names=("yolov9-c" "yolov9-c-relu" "yolov9-e" "yolov8n" "yolov8s" "yolov8m" "yolov8l" "yolov8x" "yolov7" "yolov7x")
 fi
 
 trash_dir="./models_trash"
@@ -224,43 +216,49 @@ for model_dir in ./models/*; do
     fi
 done
 
-
-
 # Convert ONNX models to TensorRT engines
 for model_name in "${model_names[@]}"; do
+    if [[ $model_name == *"yolov8"* ]]; then
+        if [[ $trt_plugin != "yoloNMS" ]]; then
+            echo "Model '$model_name' only support --plugin yoloNMS. The efficientNMS will be supported on future."
+            exit 1
+        fi
+    fi
+    if [[ $model_name == *"qat"* ]]; then
+        if [[ $trt_plugin != "efficientNMS" ]]; then
+            echo "Model '$model_name' only support --plugin efficientNMS . The yoloNMS will be supported on future."
+            exit 1
+        fi
+    fi
+    if [[ $model_mode == "eval" && $trt_plugin == "none" ]]; then
+        echo "Not Supported EVALUATION without efficientNMS or yoloNMS. Only INFERENCE is supported to perfomance latency testing purpose. "
+        exit 1
+    fi
+    
     model_dir=./models/$model_name/1
     mkdir -p $model_dir
 
-    if [[ $model_mode == "eval" && $efficient_nms == "enable" ]]; then
-        onnx_file=./models_onnx/eval-${model_name}-end2end.onnx
-        trt_file=${model_dir}/eval-end2end-${model_name}-max-batch-${max_batch_size}.engine
-        file_pattern="${model_dir}/eval-end2end-${model_name}-max-batch-*.engine"
-        download_model=eval-${model_name}-end2end
-    fi
-
-    if [[ $model_mode == "inference" && $efficient_nms == "enable" ]]; then
-        onnx_file=./models_onnx/infer-${model_name}-end2end.onnx
-        trt_file=${model_dir}/infer-end2end-${model_name}-max-batch-${max_batch_size}.engine
-        file_pattern="${model_dir}/infer-end2end-${model_name}-max-batch-*.engine"
-        download_model=infer-${model_name}-end2end
-    fi
-
-    if [[ $model_mode == "inference" && $efficient_nms == "disable" ]]; then
-        if [[ $model_name == *"qat"* ]]; then
-            echo "Model '$model_name' without '--efficient_nms enable' is not supported yet."
-            exit 1
+    if [[ $model_mode == "eval" || $model_mode == "infer"  && $trt_plugin != "none" ]]; then
+        if [[ $trt_plugin == "efficientNMS" ]]; then
+            onnx_file=./models_onnx/${model_mode}-${model_name}-end2end.onnx
+            download_model=${model_mode}-${model_name}-end2end
         fi
+        if [[ $trt_plugin == "yoloNMS" ]]; then
+            onnx_file=./models_onnx/${model_mode}-${model_name}-trt.onnx
+            download_model=${model_mode}-${model_name}-trt
+        fi
+        trt_file=${model_dir}/${model_mode}-${trt_plugin}-${model_name}-max-batch-${max_batch_size}.engine
+        file_pattern="${model_dir}/${model_mode}-${trt_plugin}-${model_name}-max-batch-*.engine"
+    fi
+    
+
+    if [[ $model_mode == "infer" && $trt_plugin == "none" ]]; then
         onnx_file=./models_onnx/infer-${model_name}.onnx
         trt_file=${model_dir}/infer-${model_name}-max-batch-${max_batch_size}.engine
         file_pattern="${model_dir}/infer-${model_name}-max-batch-*.engine"
         download_model=infer-${model_name}
     fi
 
-    if [[ $model_mode == "eval" && $efficient_nms == "disable" ]]; then
-        echo "Not Supported EVALUATION without Efficient NMS. Only INFERENCE is supported to perfomance latency testing purpose. "
-        exit 1
-    fi
- 
 
     if [[ ! -f "$onnx_file" ]]; then
         cd ./models_onnx || exit 1
@@ -329,23 +327,26 @@ for model_name in "${model_names[@]}"; do
     model_dir=./models/$model_name/1
     
 
-    if [[ $efficient_nms == "enable" ]]; then
+    if [[ $trt_plugin != "none" ]]; then
+        model_end2end_type=""
+        if [[ $trt_plugin == "efficientNMS" ]]; then
+            model_end2end_type="end2end"
+        fi
+        if [[ $trt_plugin == "yoloNMS" ]]; then
+            model_end2end_type="trt"
+        fi
+
         if [[ $model_name == *"yolov7"* ]]; then
-            model_config_template=./models_config/yolov7_onnx_end2end.pbtxt
+            model_config_template=./models_config/yolov7_onnx_${model_end2end_type}.pbtxt
         fi
         if [[ $model_name == *"yolov9"* ]]; then
-            model_config_template=./models_config/yolov9_onnx_end2end.pbtxt
+            model_config_template=./models_config/yolov9_onnx_${model_end2end_type}.pbtxt
         fi
-        
-        if [[ $model_mode == "eval" ]]; then
-            trt_file=eval-end2end-${model_name}-max-batch-${max_batch_size}.engine
-            file_pattern="$model_dir/eval-end2end-${model_name}-max-batch-*.engine"
+        if [[ $model_name == *"yolov8"* ]]; then
+            model_config_template=./models_config/yolov8_onnx_${model_end2end_type}.pbtxt
         fi
-        if [[ $model_mode == "inference" ]]; then
-            trt_file=infer-end2end-${model_name}-max-batch-${max_batch_size}.engine
-            file_pattern="$model_dir/infer-end2end-${model_name}-max-batch-*.engine"
-        fi
-       
+        trt_file=${model_mode}-${trt_plugin}-${model_name}-max-batch-${max_batch_size}.engine
+        file_pattern="$model_dir/${model_mode}-${trt_plugin}-${model_name}-max-batch-*.engine"
     else
         if [[ $model_name == *"yolov7"* ]]; then
             model_config_template=./models_config/yolov7_onnx.pbtxt
@@ -356,7 +357,7 @@ for model_name in "${model_names[@]}"; do
         if [[ $model_name == *"yolov9"* ]]; then
             model_config_template=./models_config/yolov9_onnx.pbtxt
         fi
-        if [[ $model_mode == "inference" ]]; then
+        if [[ $model_mode == "infer" ]]; then
             trt_file=infer-${model_name}-max-batch-${max_batch_size}.engine
             file_pattern="$model_dir/infer-${model_name}-max-batch-*.engine"
         fi
@@ -370,7 +371,7 @@ for model_name in "${model_names[@]}"; do
         sed -i "s/TOPK/300/g" "$config_file"
         echo "Configured Topk-all 300 in $config_file"
     fi
-    if [[ $model_mode == "inference" ]]; then
+    if [[ $model_mode == "infer" ]]; then
         sed -i "s/TOPK/100/g" "$config_file"
         echo "Configured Topk-all 100 in $config_file"
     fi
@@ -388,9 +389,6 @@ for model_name in "${model_names[@]}"; do
             fi
         fi
     done
-
- 
-
 
     sed -i "s/model_template_name/$model_name/g" "$config_file"
     sed -i "s/model_template_file/$trt_file/g" "$config_file"
