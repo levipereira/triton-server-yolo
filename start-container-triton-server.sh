@@ -49,7 +49,7 @@
 #   nvcr.io/nvidia/tritonserver:23.08-py3: Specifies the Docker image to use.
 
 docker run --gpus all \
- --name triton-server-23.08 \
+ --name triton-server-25.03 \
  --rm \
  -it \
  --ipc=host \
@@ -61,4 +61,4 @@ docker run --gpus all \
  -p8002:8002 \
  -v $(pwd):/apps \
  -w /apps  \
- nvcr.io/nvidia/tritonserver:23.08-py3
+ nvcr.io/nvidia/tritonserver:25.03-py3
